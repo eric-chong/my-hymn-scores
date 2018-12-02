@@ -16,13 +16,18 @@ const VALID_VALUES = [
 ];
 
 export default class Note {
-  constructor(note, octave, value) {
+  constructor(id, note, octave, value) {
     if (!VALID_NOTES.includes(note)) throw "invalid note";
     if (!VALID_VALUES.includes(value)) throw "invalid note value";
 
+    this._id = id;
     this._note = note;
     this._octave = octave;
     this._value = value;
+  }
+
+  getId() {
+    return this._id;
   }
 
   getNote() {

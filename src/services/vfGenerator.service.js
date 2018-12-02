@@ -27,12 +27,16 @@ const FONT = {
   weight: ""
 };
 
+const vfFactory = VF.Flow.Factory;
+
 export default class VfGenerator {
-  constructor(vf, timeSignature, width, height) {
+  constructor(elementId, timeSignature, width, height) {
     this._x = 0;
     this._y = 60;
 
-    this._vf = vf;
+    this._vf = new vfFactory({
+      renderer: { elementId, width, height }
+    });
 
     this._score = this._vf.EasyScore();
     console.log(this._vf);
@@ -51,7 +55,6 @@ export default class VfGenerator {
 
   generateSystems(singleVoiceScore) {
     let systems = singleVoiceScore.getSystems(this._width - 100);
-    console.log("systems", systems);
     let vfSystem;
 
     systems.forEach((system, systemIndex) => {
