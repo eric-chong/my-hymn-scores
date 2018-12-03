@@ -28,12 +28,15 @@ const FONT = {
 };
 
 const vfFactory = VF.Flow.Factory;
+const vfRegistry = VF.Flow.Registry;
 
 export default class VfGenerator {
   constructor(elementId, timeSignature, width, height) {
     this._x = 0;
     this._y = 60;
 
+    this._registry = new vfRegistry();
+    vfRegistry.enableDefaultRegistry(this._registry);
     this._vf = new vfFactory({
       renderer: { elementId, width, height }
     });
@@ -93,6 +96,8 @@ export default class VfGenerator {
       this._x = 0;
       this._y += 170;
     });
+
+    this._generateCurves(singleVoiceScore);
   }
 
   generateMeasureNotes(measure) {
@@ -102,8 +107,6 @@ export default class VfGenerator {
         .map(note => {
           if (note instanceof BeamNotes) {
             const beamNotes = note.getNotes();
-            // return VF.Flow.Beam.generateBeams(this._generateVfNotes(beamNotes));
-            // return this._beam(this._generateVfNotes(beamNotes), { stem: "up" });
             return this._generateVfNotes(beamNotes);
           } else if (note instanceof TripletNote) {
             const tripletNote = note;
@@ -180,6 +183,17 @@ export default class VfGenerator {
     return this._tuplet(this._notes(easyScoreNotes));
   }
 
+  _generateCurves(singleVoiceScore) {
+    const curves = singleVoiceScore.getCurves();
+    curves.forEach(curve => {
+      const from = this._getNoteById(curve.getStartId());
+      const to = this._getNoteById(curve.getEndId());
+      if (from && to) {
+        this._vf.Curve({ from, to });
+      }
+    });
+  }
+
   _calculateMeasureBeats(notes) {
     const measureNotesTotalValue = this._calculateMeasureNotesTotalValue(notes);
     const measureNoteValue = noteValueMap[this._timeSignature.getNoteValue()];
@@ -213,13 +227,17 @@ export default class VfGenerator {
       return totalValue + noteValueMap[currNote.getValue()];
     }, 0);
   }
+
+  _getNoteById(id) {
+    return this._registry.getElementById(id);
+  }
 }
 
 function easyScoreNote(note) {
   if (note.getNote() === "r") {
     return `B4/${note.getValue()}/${note.getNote()}`;
   } else {
-    return `${note.getNote()}${note.getOctave()}/${note.getValue()}`;
+    return `${note.getNote()}${note.getOctave()}/${note.getValue()}[id="${note.getId()}"]`;
   }
 }
 

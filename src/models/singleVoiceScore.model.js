@@ -1,16 +1,27 @@
 import Score from "./score.model";
 import Measure from "./measure.model";
+import Curve from "./curve.model";
 
 export default class SingleVoiceScore extends Score {
   constructor(key, time, tempo) {
     super(key, time, tempo);
 
     this._measures = [];
+    this._curves = [];
   }
 
   addMeasure(measure) {
     if (!measure instanceof Measure) throw "cannot add measure";
     this._measures.push(measure);
+  }
+
+  addCurve(curve) {
+    if (!curve instanceof Curve) throw "cannot add curve";
+    this._curves.push(curve);
+  }
+
+  getCurves() {
+    return this._curves;
   }
 
   getMeasure(measureIndex) {
