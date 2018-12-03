@@ -52,7 +52,7 @@ function drawMusicScore(elementId) {
   const vfGenerator = new VfGenerator(
     elementId,
     singleVoiceScore.getTimeSignature(),
-    1200,
+    900,
     1200
   );
   singleVoiceScore.addMeasure(

@@ -3,6 +3,8 @@ import BeamNotes from "../models/beamNote.model";
 import TripletNote from "../models/tripletNote";
 import VF from "vexflow";
 
+import isEqual from "lodash/isEqual";
+
 const noteValueMap = {
   w: 1,
   h: 1 / 2,
@@ -189,7 +191,12 @@ export default class VfGenerator {
       const from = this._getNoteById(curve.getStartId());
       const to = this._getNoteById(curve.getEndId());
       if (from && to) {
-        this._vf.Curve({ from, to });
+        if (!isEqual(from.ys, to.ys)) {
+          this._vf.Curve({ from, to: null });
+          this._vf.Curve({ from: null, to });
+        } else {
+          this._vf.Curve({ from, to });
+        }
       }
     });
   }
