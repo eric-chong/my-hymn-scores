@@ -11,6 +11,7 @@ import Lyric from "../models/lyric.model";
 import VfGenerator from "../services/vfGenerator.service";
 import TripletNote from "../models/tripletNote";
 import Curve from "../models/curve.model";
+import TripletLyric from "../models/tripletLyric";
 
 const FONT = {
   family: "Arial",
@@ -53,7 +54,7 @@ function drawMusicScore(elementId) {
     elementId,
     singleVoiceScore.getTimeSignature(),
     900,
-    1200
+    1300
   );
   singleVoiceScore.addMeasure(
     new Measure()
@@ -410,10 +411,13 @@ function drawMusicScore(elementId) {
       )
       .addChord(new Chord("E", "w"))
       .addLyric(new Lyric("起，", "h"))
-      .addLyric(new Lyric("", "8"))
-      .addLyric(new Lyric("直", "8"))
-      .addLyric(new Lyric("到", "8"))
-      .addLyric(new Lyric("永", "8"))
+      .addLyric(
+        new TripletLyric([
+          new Lyric("直", "q"),
+          new Lyric("到", "q"),
+          new Lyric("永", "q")
+        ])
+      )
       .setMeasureBar("singleRight")
   );
   singleVoiceScore.addMeasure(

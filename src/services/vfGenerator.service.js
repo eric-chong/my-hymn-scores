@@ -4,6 +4,7 @@ import TripletNote from "../models/tripletNote";
 import VF from "vexflow";
 
 import isEqual from "lodash/isEqual";
+import TripletLyric from "../models/tripletLyric";
 
 const noteValueMap = {
   w: 1,
@@ -131,15 +132,33 @@ export default class VfGenerator {
   generateMeasureLyrics(measure) {
     const lyrics = measure.getLyrics();
     return this._voice(
-      lyrics.map(lyric => {
-        return this._vf
-          .TextNote({
-            text: lyric.getLyricWord(),
-            duration: lyric.getDuration(),
-            font: FONT
-          })
-          .setLine(12);
-      }),
+      lyrics
+        .map(lyric => {
+          if (lyric instanceof TripletLyric) {
+            const textNotes = lyric.getLyrics().map(lyricWord => {
+              const textNode = this._vf
+                .TextNote({
+                  text: lyricWord.getLyricWord(),
+                  duration: lyricWord.getDuration(),
+                  font: FONT
+                })
+                .setLine(12);
+              textNode.applyTickMultiplier(2, 3);
+              return textNode;
+            });
+            console.log("textNotes", textNotes);
+            // this._tuplet(textNotes);
+            return textNotes;
+          }
+          return this._vf
+            .TextNote({
+              text: lyric.getLyricWord(),
+              duration: lyric.getDuration(),
+              font: FONT
+            })
+            .setLine(12);
+        })
+        .flat(),
       { time: this._calculateMeasureLyricBeats(lyrics) }
     );
   }
@@ -156,7 +175,7 @@ export default class VfGenerator {
           })
           .setLine(1);
       }),
-      { time: this._calculateMeasureLyricBeats(chords) }
+      { time: this._calculateMeasureChordBeats(chords) }
     );
   }
 
@@ -219,7 +238,7 @@ export default class VfGenerator {
       measureNoteValue}/${this._timeSignature.getNoteValue()}`;
   }
 
-  _calculateMeasureLyricBeats(chords) {
+  _calculateMeasureChordBeats(chords) {
     const measureChordsTotalValue = chords.reduce((totalValue, currChord) => {
       return totalValue + noteValueMap[currChord.getDuration()];
     }, 0);

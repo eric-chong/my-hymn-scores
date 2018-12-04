@@ -12,7 +12,6 @@ const NOTE_WIDTH_MAP = {
 export default class MeasureWidthCalculator {
   static calcWidth(measure) {
     const notes = measure.getNotes();
-    let width = 0;
     return notes.reduce((width, currNote) => {
       return width + NOTE_WIDTH_MAP[currNote.getValue()];
     }, 0);

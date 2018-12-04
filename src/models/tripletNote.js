@@ -14,6 +14,13 @@ export default class TripletNote {
   }
 
   getValue() {
-    return "h";
+    const valueMap = {
+      "32": "16",
+      "16": "8",
+      "8": "q",
+      q: "h",
+      h: "w"
+    };
+    return valueMap[this._notes[0].getValue()];
   }
 }
