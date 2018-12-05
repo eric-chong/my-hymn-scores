@@ -64,13 +64,13 @@ export default class VfGenerator {
     let vfSystem;
 
     systems.forEach((system, systemIndex) => {
-      let spareSystemWidthPerMeasure =
-        (this._width -
-          101 -
-          system.reduce((totalWidth, currMeasure) => {
-            return totalWidth + currMeasure.getWidth();
-          }, 0)) /
-        system.length;
+      const totalSpareWidth =
+        this._width -
+        101 -
+        system.reduce((totalWidth, currMeasure) => {
+          return totalWidth + currMeasure.getWidth();
+        }, 0);
+      let spareSystemWidthPerMeasure = totalSpareWidth / system.length;
       const isLastSystem = systemIndex === systems.length - 1;
 
       system.forEach((measure, index) => {
@@ -146,8 +146,6 @@ export default class VfGenerator {
               textNode.applyTickMultiplier(2, 3);
               return textNode;
             });
-            console.log("textNotes", textNotes);
-            // this._tuplet(textNotes);
             return textNotes;
           }
           return this._vf

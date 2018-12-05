@@ -54,7 +54,7 @@ function drawMusicScore(elementId) {
     elementId,
     singleVoiceScore.getTimeSignature(),
     900,
-    1300
+    1500
   );
   singleVoiceScore.addMeasure(
     new Measure()

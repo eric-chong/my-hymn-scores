@@ -40,7 +40,7 @@ export default class SingleVoiceScore extends Score {
       } else {
         systems.push(currSystem);
         currSystem = [];
-        currSystemWidth = 0;
+        currSystemWidth = measureWidth;
       }
       currSystem.push(measure);
     });
